@@ -15,7 +15,8 @@ class Dishdetail extends Component{
     renderDish= (dish) =>{
         if(dish!=null)
          return(
-             <React.Fragment>
+             <div className="container">
+             <div className= "row">
             <div className="col-12 col-md-5 m-1">
                 <Card>
                     <CardImg width="100%" src={dish.image} alt= {dish.name}/>
@@ -29,7 +30,9 @@ class Dishdetail extends Component{
               <h4>Comments</h4>
               {this.renderComments(dish.comments)}
             </div>
-            </React.Fragment>
+            </div>
+            </div>
+    
          );
         else
         return(
@@ -44,7 +47,7 @@ class Dishdetail extends Component{
                   return(
                   <React.Fragment>
                   <li>{co.comment}</li><br></br>
-                  <li>--{co.author}, {this.formatDate(co.date)}</li><br></br>
+                  <li>--{co.author}, {new Intl.DateTimeFormat("en-US", {year: 'numeric', month:'short', day:'2-digit'}).format(new Date(Date.parse(co.date)))}</li><br></br>
                   </React.Fragment>
                   )
               })
