@@ -1,18 +1,9 @@
-import React, {Component } from 'react';
+import React from 'react';
 import {Card, CardBody, CardImg, CardText, CardTitle} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'
-class Dishdetail extends Component{
 
-    render(){
-        const {dish} = this.props;
-        return(
-         <div className="row">
-             {this.renderDish(dish)}
-         </div>
-        );
-    }
 
-    renderDish= (dish) =>{
+    function RenderDish({dish}){
         if(dish!=null)
          return(
              <div className="container">
@@ -28,7 +19,7 @@ class Dishdetail extends Component{
             </div>
             <div className="col-12 col-md-5 m-1">
               <h4>Comments</h4>
-              {this.renderComments(dish.comments)}
+              <RenderComments  comments = {dish.comments} />
             </div>
             </div>
             </div>
@@ -40,7 +31,7 @@ class Dishdetail extends Component{
         );
     }
 
-    renderComments = (comments)=>{
+    function RenderComments({comments}){
         if(comments!=null){
 
               const com = comments.map(co =>{
@@ -65,14 +56,14 @@ class Dishdetail extends Component{
 
     }
 
-    formatDate(date){
-        const option = {year: 'numeric', month:'short', day:'numeric'}
-        const date1 = new Date(date)
-        const newDate = date1.toLocaleDateString("en-US",option);
-        return newDate;
-
+    const Dishdetail = (props)=>{
+        return(
+         <div className="row">
+             <RenderDish dish = {props.dish}/>
+         </div>
+        );
     }
 
-}
+
 
 export default Dishdetail;
