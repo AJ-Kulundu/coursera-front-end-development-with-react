@@ -1,14 +1,114 @@
-import React from 'react';
-import {BreadcrumbItem,Breadcrumb, Card, CardBody, CardImg, CardText, CardTitle} from 'reactstrap';
+/* eslint-disable react/jsx-pascal-case */
+import React, {Component} from 'react';
+import {BreadcrumbItem,Breadcrumb, Card, CardBody, CardImg, CardText, CardTitle, Modal, ModalHeader, ModalBody,Button, Label,Col} from 'reactstrap';
 import {Link} from 'react-router-dom';
+import {Control,LocalForm,Errors} from 'react-redux-form';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+const required = (val) => val && val.length;
+const minLength =(len) => (val) => !(val) || (val.length>= len);
+const maxLength = (len) => (val) => val && (val.length <= len);
+ 
+class  CommentForm extends Component {
+    constructor(props){
+        super(props);
+         
+        this.state = {
+            isModalOpen: false
+        }
+      
+     this.toggleModal = this.toggleModal.bind(this);
+     this.handleComment = this.handleComment.bind(this);
+    }
+
+    toggleModal(){
+      this.setState({isModalOpen:!this.state.isModalOpen})
+    }
+
+    handleComment(values){
+        this.toggleModal();
+        alert("Current state is: "+ JSON.stringify(values));
+        
+    }
+   
+    render() { 
+        return ( 
+            <div>
+            <Button outline onClick={this.toggleModal}>
+                  <span className = "fa fa-pencil fa-lg">Submit Comment</span>
+            </Button>
+            <Modal isOpen={this.state.isModalOpen} toggle = {this.toggleModal}>
+                <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
+                <ModalBody>
+                    <LocalForm onSubmit={this.handleComment}>
+                       <div className="form-group">
+                           <Label htmlFor="rating" md={12}>Rating</Label>
+                           <Col md={11}>
+                               <Control.select model=".rating"
+                               name="rating"
+                               className= "form_control"
+                               defaultValue = "1">
+                                   <option>1</option>
+                                   <option>2</option>
+                                   <option>3</option>
+                                   <option>4</option>
+                                   <option>5</option>
+                               </Control.select>
+                           </Col>
+                       </div>
+                       <div className="form-group">
+                           <Label htmlFor="author" md={12}>Your Name</Label>
+                           <Col md={11}>
+                               <Control.text model=".author"
+                               name="author"
+                               placeholder="Your Name"
+                               className="form-control"
+                               validators= {{
+                                   required, 
+                                   minLength:minLength(3),
+                                   maxLength:maxLength(15)
+                               }}
+                                />
+                               <Errors 
+                               className="text-danger"
+                               model=".author"
+                               show="touched"
+                               messages = {{
+                                   required:'Required ',
+                                   minLength:'Must be greater than 2 characters',
+                                   maxLength:'Must be 15 characters or less' 
+                               }}/>
+                           </Col>
+                       </div>
+                       <div className="form-group">
+                           <Label htmlFor="comment"md={12}>Comment</Label>
+                           <Col md={11}>
+                               <Control.textarea model=".comment"
+                               name="comment"
+                               className="form-control" 
+                               rows= "6"/>
+                           </Col>
+                       </div>
+                       <div className="form-group">
+                           <Col md={{size:10, offset:2}}>
+                               <Button type="submit" color="primary">Submit</Button>
+                           </Col>
+                       </div>
+                    </LocalForm>
+                </ModalBody>
+            </Modal>
+            </div>
+         );
+    }
+}
+ 
 
 
     function RenderDish({dish}){
         if(dish!=null)
          return(
             <div className="col-12 col-md-5 m-1">
-                <Card>
+                <Card key={dish.id}>
                     <CardImg width="100%" src={dish.image} alt= {dish.name}/>
                      <CardBody>
                          <CardTitle>{dish.name}</CardTitle>
@@ -37,6 +137,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
           return(
               <ul className = "list-unstyled">
                   {com}
+                  <CommentForm /> 
               </ul>
           );
         }
